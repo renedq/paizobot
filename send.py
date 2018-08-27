@@ -2,6 +2,7 @@ from slackclient import SlackClient
 import requests
 import os
 import time
+import json
 
 def send_message(msg):
     slack_token = os.environ["SLACK_API_TOKEN"]
@@ -36,7 +37,9 @@ if status != old_status:
     f.write(status)
     f.close()
 elif int(diff_time) > 3600 and (status == 'down' or status == 'super broke'):
-    send_message("https://www.paizo.com is still {}. Typical amirite?".format(status))
+    i = requests.get("https://insult.mattbas.org/api/insult.json")
+    insult = i.json()['insult']
+    send_message("https://www.paizo.com is still {}. {}".format(status, insult))
     f = open("status.txt", "w") 
     f.write(status)
     f.close()
