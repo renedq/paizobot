@@ -3,9 +3,15 @@ import requests
 import os
 import time
 import json
+import configparser
+import twitter
 
 def send_message(msg):
-    slack_token = os.environ["SLACK_API_TOKEN"]
+    c = configparser.ConfigParser()
+    c.read("config.ini")
+    
+    #to slack
+    slack_token = c["Prod"]["SLACK_API_TOKEN"]
     sc = SlackClient(slack_token)
 
     sc.api_call(
@@ -14,6 +20,13 @@ def send_message(msg):
       #channel="CCEM7951Q", #testrene
       text=msg
     )
+    
+    #to twitter @paizobot
+    api = twitter.Api (consumer_key = c["Prod"]["CONS_API_KEY"],
+                       consumer_secret = c["Prod"]["CONS_API_SEC_KEY"],
+                       access_token_key = c["Prod"]["ACCESS_TOKEN"],
+                       access_token_secret = c["Prod"]["ACCESS_TOKEN_SECRET"]) 
+    api.PostUpdate(msg)
 
 with open("status.txt", "r") as status_file:
     old_status=status_file.read()
