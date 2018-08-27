@@ -19,7 +19,9 @@ with open("status.txt", "r") as status_file:
 
 r = requests.get('https://www.paizo.com')
 
-if 'undergoing maintenance' in r.text:
+if r.status_code != 200:
+    status = "super broke"
+elif 'maintenance</title>' in r.text.lower():
     status = "down"
 else:
     status = "up"
@@ -29,12 +31,12 @@ current_time = time.time()
 diff_time = current_time - file_time
 
 if status != old_status:
-    send_message("Oh SHIT! https://www.paizo.com is {} :thumbs{}:".format(status, status))
+    send_message("Oh SHIT! https://www.paizo.com is {}".format(status, status))
     f = open("status.txt", "w") 
     f.write(status)
     f.close()
-elif int(diff_time) > 3600 and status == 'down':
-    send_message("https://www.paizo.com is still down. Typical amirite?")
+elif int(diff_time) > 3600 and (status == 'down' or status == 'super broke'):
+    send_message("https://www.paizo.com is still {}. Typical amirite?".format(status))
     f = open("status.txt", "w") 
     f.write(status)
     f.close()
