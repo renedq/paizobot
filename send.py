@@ -26,12 +26,15 @@ def send_message(msg):
                        consumer_secret = c["Prod"]["CONS_API_SEC_KEY"],
                        access_token_key = c["Prod"]["ACCESS_TOKEN"],
                        access_token_secret = c["Prod"]["ACCESS_TOKEN_SECRET"]) 
+    #try:
     api.PostUpdate(msg)
+    #except Exception as err:
+    #    print(err.message)
 
 with open("status.txt", "r") as status_file:
     old_status=status_file.read()
 
-r = requests.get('https://www.paizo.com')
+r = requests.get('https://www.paizo.com', timeout=5)
 
 if r.status_code != 200:
     status = "super broke"
@@ -45,11 +48,11 @@ current_time = time.time()
 diff_time = current_time - file_time
 
 if status != old_status:
-    send_message("Oh SHIT! https://www.paizo.com is {}".format(status, status))
     f = open("status.txt", "w") 
     f.write(status)
     f.close()
-elif int(diff_time) > 3600 and (status == 'down' or status == 'super broke'):
+    send_message("Oh SHIT! https://www.paizo.com is {}".format(status, status))
+elif int(diff_time) > 60*60*24 and (status == 'down' or status == 'super broke'):
     i = requests.get("https://insult.mattbas.org/api/insult.json")
     insult = i.json()['insult']
     send_message("https://www.paizo.com is still {}. {}".format(status, insult))
