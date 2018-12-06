@@ -1,10 +1,8 @@
 from slackclient import SlackClient
 import requests
 import os
-import time
 import json
 import configparser
-import twitter
 
 def send_message(msg):
     c = configparser.ConfigParser()
