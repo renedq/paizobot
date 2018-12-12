@@ -27,7 +27,6 @@ for f in list(filelist.items())[1][1]:
                 "files.delete",
                 file=f['id']
             )
-        print(r)
         count_del+=1
 
 print("Kept {} text or pinned files".format(count_text))
