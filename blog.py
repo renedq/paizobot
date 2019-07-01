@@ -14,7 +14,7 @@ def send_message(msg):
 
     sc.api_call(
       "chat.postMessage",
-      channel="C6U5PLJHE", #paizo
+      channel="CCDRE8N7Q", #paizo
       #channel="C0W7NPCTY", #pathfinder
       #channel="CCEM7951Q", #testrene
       text=msg
